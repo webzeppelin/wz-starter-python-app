@@ -1,13 +1,11 @@
-FROM gliderlabs/alpine:latest
+FROM python:3.5.2-alpine
 
 COPY requirements.txt run.py /workdir/
 
 RUN apk --no-cache add \
-    python3 \
-    py-pip \
-  && apk --update add --virtual build-dependencies gcc python3-dev build-base \
-  && pip install -r /workdir/requirements.txt \
-  && apk del build-dependencies \
+    gcc \
+    musl-dev \
+  && python3 -m pip install -r /workdir/requirements.txt \
   && adduser -D app \
   && mkdir -p /workdir  \
   && chown -R app:app /workdir
