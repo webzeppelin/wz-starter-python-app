@@ -1,0 +1,34 @@
+version: '2'
+services:
+  public-server:
+    build: ./public/server
+    image: public-server/python3
+    ports:
+      - "8081:8081"
+    container_name: public-server
+#  public-client:
+#    build: ./public/client
+#    image: public-client/angular2
+#    ports:
+#      - "3000:8080"
+#    container_name: public-client
+#    links:
+#      - public-server
+#    depends_on:
+#      - public-server
+#  private-server:
+#    build: ./private/server
+#    image: public-server/python3
+#    ports:
+#      - "8081:8081"
+#    container_name: public-server
+#  private-client:
+#    build: ./private/client
+#    image: public-client/angular2
+#    ports:
+#      - "3000:8080"
+#    container_name: public-client
+#    links:
+#      - public-server
+#    depends_on:
+#      - public-server
