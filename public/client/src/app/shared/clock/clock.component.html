@@ -1,0 +1,5 @@
+<div *ngIf="server_time">
+    <h2>Server Time</h2>
+    <div><label>Time: </label>{{server_time.hour}} : {{server_time.minute}} : {{server_time.second}}</div>
+    <div><label>Timezone: </label>{{server_time.tz_name}} ({{server_time.tz_offset}})</div>
+</div>
