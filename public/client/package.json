@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf node_modules doc dist && npm cache clean",
+    "clean": "rimraf doc dist node_modules && npm cache clean",
     "clean-install": "npm run clean && npm install",
     "clean-start": "npm run clean-install && npm start",
     "watch": "webpack --watch --progress --profile",
@@ -21,7 +21,7 @@
     "docs": "typedoc --options typedoc.json src/app/app.component.ts",
     "start": "npm run server",
     "start:hmr": "npm run server -- --hot",
-    "postinstall": "npm run webdriver-update"
+    "postinstall": "echo hello"
   },
   "dependencies": {
     "@angular/common": "2.0.0",
@@ -44,7 +44,7 @@
     "@types/jasmine": "^2.2.29",
     "@types/node": "^6.0.38",
     "@types/protractor": "^1.5.16",
-    "@types/selenium-webdriver": "^2.44.29",
+    "@types/selenium-webdriver": "2.44.*",
     "angular2-template-loader": "^0.4.0",
     "autoprefixer": "^6.3.2",
     "codelyzer": "0.0.26",
@@ -67,6 +67,7 @@
     "karma-remap-istanbul": "0.1.1",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "1.7.0",
+    "ng2-bootstrap": "1.1.5",
     "node-sass": "^3.4.2",
     "null-loader": "0.1.1",
     "phantomjs-prebuilt": "^2.1.4",

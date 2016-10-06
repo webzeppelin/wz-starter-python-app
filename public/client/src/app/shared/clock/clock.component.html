@@ -1,5 +1,11 @@
-<div *ngIf="server_time">
-    <h2>Server Time</h2>
-    <div><label>Time: </label>{{server_time.hour}} : {{server_time.minute}} : {{server_time.second}}</div>
-    <div><label>Timezone: </label>{{server_time.tz_name}} ({{server_time.tz_offset}})</div>
+<div *ngIf="server_time" class="card">
+    <div class="panel panel-default">
+      <div class="panel-heading">Server Time</div>
+      <div class="panel-body">
+          {{ formatted_time }}
+          <br/>
+          {{server_time.tz_name}} ({{server_time.tz_offset}})
+      </div>
+
+    </div>
 </div>

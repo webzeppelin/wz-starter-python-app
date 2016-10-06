@@ -1,8 +1,25 @@
 // styles in src/style directory are applied to the whole page
 body {
-    background: #0147A7;
-    color: #fff;
+    background: #fff;
+    color: #000;
+    padding-top: 5px;
 }
 a {
-    color: #03A9F4;
+    color: #101080;
+}
+
+h1 {
+    text-align: left;
+    color: #fff;
+}
+
+p {
+    // text-align: center;
+    color: #555;
+}
+
+main {
+    .container {
+        background: #555;
+    }
 }
