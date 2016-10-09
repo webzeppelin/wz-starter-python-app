@@ -39,12 +39,19 @@ export class BrowseGuestbookComponent implements OnInit {
     private handleLoadComplete(results: GuestbookEntrySet): void {
         this.resetModel();
         if (results.count > 0) {
+            this.fixResults(results);
             this.model = this.model.concat(results.entries);
             this.last_id = results.last_id
         }
         this.state_loaded = true;
         this.state_has_more = results.has_more;
         console.log('Loaded: '+JSON.stringify(results));
+    }
+
+    private fixResults(results: GuestbookEntrySet): void {
+        for (let entry of results.entries) {
+            if (entry.timestamp) entry.timestamp = new Date(entry.timestamp);
+        }
     }
 
     loadMore() {
@@ -63,6 +70,7 @@ export class BrowseGuestbookComponent implements OnInit {
     private handleLoadMoreComplete(results: GuestbookEntrySet): void {
         this.state_loading_more = false;
         if (results.count > 0) {
+            this.fixResults(results);
             this.model = this.model.concat(results.entries);
             this.last_id = results.last_id
         }

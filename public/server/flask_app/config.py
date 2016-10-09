@@ -5,6 +5,7 @@ import logging
 from logging import handlers
 from flask import Flask
 from flask_cors import CORS
+from .utils.encode import MyJSONEncoder
 
 app = Flask(__name__)
 
@@ -89,3 +90,4 @@ def configure_app(app):
     # set up cross origin handling
     CORS(app, headers=['Content-Type'])
 
+    app.json_encoder = MyJSONEncoder

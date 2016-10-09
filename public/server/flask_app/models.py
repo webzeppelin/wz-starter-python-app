@@ -5,6 +5,7 @@ class HealthStatus(object):
     def to_dict(self):
         return self.__dict__
 
+
 class ServerTime(object):
     def __init__(self, hour = 0, minute = 0, second = 0, tz_name = 'Default', tz_offset = 0):
         self.hour = hour
@@ -15,3 +16,44 @@ class ServerTime(object):
 
     def to_dict(self):
         return self.__dict__
+
+
+class GuestbookEntry(object):
+    def __init__(self, id = None, name = None, message = None, timestamp = None):
+        self.id = id
+        self.name = name
+        self.message = message
+        self.timestamp = timestamp
+
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(dict):
+        return GuestbookEntry(
+            id = dict.get('id'),
+            name = dict.get('name'),
+            message = dict.get('message'),
+            timestamp=dict.get('timestamp')
+        )
+
+
+
+class GuestbookEntrySet(object):
+    def __init__(self, entries=[], count=0, last_id=None, has_more=False):
+        self.entries = entries
+        self.count = count
+        self.last_id = last_id
+        self.has_more = has_more
+
+    def to_dict(self):
+        ret = dict(
+            count=self.count,
+            last_id=self.last_id,
+            has_more=self.has_more
+        )
+        entries = []
+        for x in self.entries:
+            entries.append(x.to_dict())
+        ret['entries'] = entries
+        return ret
