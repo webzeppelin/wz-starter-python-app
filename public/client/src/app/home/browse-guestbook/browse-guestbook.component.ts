@@ -9,7 +9,7 @@ import { ApiService } from '../../shared/api.service';
 })
 export class BrowseGuestbookComponent implements OnInit {
     model: GuestbookEntry[];
-    last_id: number;
+    last_id: string;
     state_loaded: boolean;
     state_loading_more: boolean;
     state_has_more: boolean;

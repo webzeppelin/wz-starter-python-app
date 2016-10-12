@@ -52,7 +52,7 @@ export class SignGuestbookComponent {
     }
 
     resetModel(): void {
-        this.model = new GuestbookEntry(0, null, null, null);
+        this.model = new GuestbookEntry(null, null, null, null);
     }
 
     // TODO: Remove this when we're done

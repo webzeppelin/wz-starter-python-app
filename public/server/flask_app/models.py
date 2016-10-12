@@ -1,3 +1,5 @@
+import iso8601
+
 class HealthStatus(object):
     def __init__(self, is_up = False):
         self.is_up = is_up
@@ -29,15 +31,16 @@ class GuestbookEntry(object):
         return self.__dict__
 
     @staticmethod
-    def from_dict(dict):
-        return GuestbookEntry(
-            id = dict.get('id'),
-            name = dict.get('name'),
-            message = dict.get('message'),
-            timestamp=dict.get('timestamp')
+    def from_dict(dic):
+        ret = GuestbookEntry(
+            id = dic.get('id'),
+            name = dic.get('name'),
+            message = dic.get('message'),
+            timestamp=dic.get('timestamp')
         )
-
-
+        if isinstance(ret.timestamp, str):
+            ret.timestamp = iso8601.parse_date(ret.timestamp)
+        return ret
 
 class GuestbookEntrySet(object):
     def __init__(self, entries=[], count=0, last_id=None, has_more=False):

@@ -47,7 +47,7 @@ export class ApiService {
             .catch(this.handleError);
     }
 
-    public browseGuestbookMore = (last_id: number): Observable<GuestbookEntrySet> => {
+    public browseGuestbookMore = (last_id: string): Observable<GuestbookEntrySet> => {
         // retrieve the most recent guestbook entries since the id provided
         return this._http.get(this.actionUrl + 'guestbook?last_id='+last_id)
             .map((response: Response) => <GuestbookEntrySet>response.json())
