@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 HOSTNAME = '0.0.0.0'
 PORT = 8081
-REDIS_HOST = '192.168.0.107'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
 
 CONFIG = {

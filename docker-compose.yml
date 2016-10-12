@@ -32,3 +32,9 @@ services:
 #      - public-server
 #    depends_on:
 #      - public-server
+  redis:
+    build: ./redis
+    image: redis/redis
+    container_name: redis
+    ports:
+      - "6379:6379"
