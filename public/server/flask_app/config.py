@@ -5,12 +5,14 @@ import logging
 from logging import handlers
 from flask import Flask
 from flask_cors import CORS
-from .utils.encode import MyJSONEncoder
+from .utils.encode import MyFlaskJSONEncoder
 
 app = Flask(__name__)
 
 HOSTNAME = '0.0.0.0'
 PORT = 8081
+REDIS_HOST = '192.168.0.107'
+REDIS_PORT = 6379
 
 CONFIG = {
     "development": "flask_app.config.DevelopmentConfig",
@@ -90,4 +92,10 @@ def configure_app(app):
     # set up cross origin handling
     CORS(app, headers=['Content-Type'])
 
-    app.json_encoder = MyJSONEncoder
+    app.json_encoder = MyFlaskJSONEncoder
+    app.redis_config = RedisConfig()
+
+class RedisConfig(object):
+    def __init__(self, host=REDIS_HOST, port=REDIS_PORT):
+        self.hostname = host
+        self.port = port

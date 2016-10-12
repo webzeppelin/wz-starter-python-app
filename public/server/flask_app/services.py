@@ -1,16 +1,20 @@
 """Entry point for the server application."""
 
 import logging
+import json
 from gevent.wsgi import WSGIServer
 from flask import request, Response, jsonify
 from datetime import datetime
+import uuid
 import time
-from pytz import timezone
+from pytz import timezone, utc
 from tzlocal import get_localzone
 from .config import configure_app, app, HOSTNAME, PORT
-from .utils import html_codes
+from .utils import encode
 from .models import HealthStatus, ServerTime, GuestbookEntry, GuestbookEntrySet
+import redis
 
+GUESTBOOK_BROWSE_PAGE_SIZE = 10
 
 @app.before_first_request
 def set_up():
@@ -53,13 +57,18 @@ def sign_guestbook():
         return error_response(400, 'Missing required parameters')
 
     entry = GuestbookEntry(
-        id=123,
+        id=new_guid(),
         name=name,
         message=message,
         timestamp=current_datetime()
     )
 
-    # this is where it will get stored in the database
+    # this is where it will get stored in redis
+    redis_key = get_redis_key(entry.id)
+    json_str = json.dumps(entry.to_dict(), cls=encode.MyJSONEncoder)
+    r = get_redis()
+    r.set(redis_key, json_str)
+    r.lpush('guestbook_list', redis_key)
 
     return success_response(entry.to_dict())
 
@@ -67,53 +76,35 @@ def sign_guestbook():
 def browse_guestbook():
     """Return the most recent guestbook entries"""
     print('Browsing the guestbook')
-    last_id_string = request.args.get("last_id")
-    if last_id_string is None:
-        entry_set = GuestbookEntrySet(
-            entries=[
-                GuestbookEntry(
-                    id=4,
-                    name='Andy Ford',
-                    message='This is my first time signing the guest book.',
-                    timestamp=current_datetime()
-                ),
-                GuestbookEntry(
-                    id=3,
-                    name='Andy Ford',
-                    message='I could not help but sign this thing again.',
-                    timestamp=current_datetime()
-                )
-            ],
-            count=2,
-            last_id=3,
-            has_more=True
-        )
+    last_id = request.args.get("last_id")
+    if last_id is None:
+        last_id = 0
     else:
-        entry_set = GuestbookEntrySet(
-            entries=[
-                GuestbookEntry(
-                    id=2,
-                    name='Franky Ford',
-                    message='I want to do this, too!',
-                    timestamp=current_datetime()
-                ),
-                GuestbookEntry(
-                    id=1,
-                    name='Franky Ford',
-                    message='I am back for more.',
-                    timestamp=current_datetime()
-                )
-            ],
-            count=2,
-            last_id=1,
-            has_more=False
-        )
+        last_id = int(last_id)
+
+    r = get_redis()
+    keys = r.lrange('guestbook_list', last_id, (last_id+GUESTBOOK_BROWSE_PAGE_SIZE-1))
+    # map(lambda x:x.decode('utf-8'), keys)
+
+    entries = []
+    for key in keys:
+        json_str = r.get(key).decode('utf-8')
+        json_dic = json.loads(json_str)
+        entry = GuestbookEntry.from_dict(json_dic)
+        entries.append(entry)
+
+    entry_set = GuestbookEntrySet(
+        entries=entries,
+        count=len(entries),
+        last_id=str(last_id+len(entries)),
+        has_more=len(entries)==GUESTBOOK_BROWSE_PAGE_SIZE
+    )
 
     return success_response(entry_set.to_dict())
 
 
 def current_datetime():
-    return datetime.utcnow() # get_localzone()
+    return datetime.now(utc)
 
 
 def error_response(status_code=400, message="Bad request"):
@@ -143,7 +134,21 @@ def internal_server_error(error):
 @app.errorhandler(Exception)
 def unhandled_exception(e):
     app.logger.error('Unhandled Exception: %s', (e))
+    print('Unhandled Exception: %s', (e))
     return error_response(500, str(e))
+
+def new_guid():
+    return str(uuid.uuid4())
+
+def get_redis():
+    cfg = app.redis_config
+    return redis.StrictRedis(host=cfg.hostname, port=cfg.port)
+
+def get_redis_key(id):
+    return 'guestbook:'+id
+
+def parse_redis_key(key):
+    return key.split(':')[1]
 
 def main():
     """Main entry point of the app."""

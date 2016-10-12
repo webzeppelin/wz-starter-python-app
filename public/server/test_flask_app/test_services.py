@@ -34,7 +34,7 @@ class ServiceTestCase(unittest.TestCase):
         print(json.dumps(json_data))
 
     def test_browse_guestbook_more(self):
-        response = self.test_client.get('/api/v1/guestbook?last_id=3')
+        response = self.test_client.get('/api/v1/guestbook?last_id=6fa459ea-ee8a-3ca4-894e-db77e160355e')
         self.assert_success_and_json(response)
         json_data = json.loads(response.data.decode('utf-8'))
         self.assertIsNotNone(json_data)

@@ -9,7 +9,7 @@ export interface ServerTime {
 
 export class GuestbookEntry {
   constructor(
-    public id: number,
+    public id: string,
     public name: string,
     public message: string,
     public timestamp: Date
@@ -20,7 +20,7 @@ export class GuestbookEntrySet {
     constructor(
         public entries: GuestbookEntry[],
         public count: number,
-        public last_id: number,
+        public last_id: string,
         public has_more: boolean
     ) { }
 }
