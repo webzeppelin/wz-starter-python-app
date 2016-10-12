@@ -6,14 +6,17 @@ services:
     ports:
       - "8081:8081"
     container_name: public-server
+    links:
+      - redis
+    depends_on:
+      - redis
+
   public-client:
     build: ./public/client
     image: public-client/angular2
     ports:
       - "3000:80"
     container_name: public-client
-    links:
-      - public-server
     depends_on:
       - public-server
 #  private-server:
