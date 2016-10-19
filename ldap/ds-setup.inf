@@ -2,7 +2,7 @@
 AdminDomain = wzstarter
 ConfigDirectoryAdminID = admin
 ConfigDirectoryAdminPwd = admin
-ConfigDirectoryLdapURL = ldap://localhost:389/o=wzstarter
+ConfigDirectoryLdapURL = ldap://localhost:389/dc=wzstarter
 FullMachineName = localhost
 ServerRoot = /usr/lib64/dirsrv
 SuiteSpotGroup = nobody
